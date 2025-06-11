@@ -11,19 +11,22 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os 
-
+import sys
+from dotenv import load_dotenv 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 TEMPLATE_DIR = os.path.join(BASE_DIR,'templates')
 
 STATIC_DIR=os.path.join(BASE_DIR,'static') 
+# Adicionar essa tag para que nosso projeto encontre o .env
+load_dotenv(os.path.join(BASE_DIR, ".env")) 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-91%76ycf_6=g=26g0+z6eje-q8_zddo($!ekwm#&05n+%oc_&6"
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -33,7 +36,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = [
+DJANGO_APPS  = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -41,6 +44,18 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
+THIRD_APPS = [ # são as Lib/app que instalamos no projeto
+    #... # update 11/03/2024 - removido esses ...
+]
+
+PROJECT_APPS = [ # são os apps que criamos no projeto 
+        # 'apps.base',		# update 11/03/2024
+        # 'apps.myapp',   # Removido esses apps que nao criamos ainda.
+]
+
+# INSTALLED_APPS é a variavel que django entende para fazer a leitura \
+# dos aplicativos então verifica a nomencratura.
+INSTALLED_APPS = DJANGO_APPS + THIRD_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -78,7 +93,11 @@ WSGI_APPLICATION = "core.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'), 
+        'NAME': os.path.join(BASE_DIR, os.getenv('NAME_DB')),
+            #'USER':os.getenv('USER_DB')
+            #'PASSWORD': os.getenv('PASSWORD_DB')
+            #'HOST':os.getenv('HOST_DB')
+            #'PORT':os.getenv('PORT_DB') 
     }
 }
 
