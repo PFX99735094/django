@@ -49,6 +49,8 @@ CORS_ALLOW_CREDENTIALS = False
 
 CORS_ORIGIN_WHITELIST = ['http://meusite.com',] # Lista. 
 
+# cookie
+
 if not DEBUG:
 	SECURE_SSL_REDIRECT = True
 	ADMINS = [(os.getenv('SUPER_USER'), os.getenv('EMAIL'))]
@@ -88,10 +90,10 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    
+    'requestlogs.middleware.RequestLogsMiddleware', # logs
     	
-	
 ]
+
 
 ROOT_URLCONF = "core.urls"
 
@@ -145,7 +147,44 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+# entrada e saida de log de todo o projeto para erro 500
+REST_FRAMEWORK={ 
+    'EXCEPTION_HANDLER': 'requestlogs.views.exception_handler',
+}
 
+# Configuração padrão de Logs 
+LOGGING = { # update 03/11/2024 
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'requestlogs_to_file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': 'info.log',
+            'when': 'midnight',  # Rotaciona a cada meia-noite
+            'backupCount': 7,  # Mantém logs dos últimos 7 dias
+            'formatter': 'verbose',  # Configuração de formatação
+        },
+    },
+    'loggers': {
+        'requestlogs': {
+            'handlers': ['requestlogs_to_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+    'formatters': {
+        'verbose': {
+            'format': '{asctime} {levelname} {message}',
+            'style': '{',
+        },
+    },
+}
+
+REQUESTLOGS = {
+    'SECRETS': ['password', 'token'],
+    'METHODS': ('PUT', 'PATCH', 'POST', 'DELETE'),
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
