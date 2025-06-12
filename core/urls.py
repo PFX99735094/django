@@ -18,9 +18,11 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
+from apps.base import views as  base_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('base/', base_views.base_view, name='base'),
 ]
 
 if settings.DEBUG: # update 03/11/2024: (em homologa com debug true adiciona rota static)

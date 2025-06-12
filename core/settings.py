@@ -22,7 +22,10 @@ TEMPLATE_DIR = os.path.join(BASE_DIR,'templates')
 
 STATIC_DIR=os.path.join(BASE_DIR,'static') 
 # Adicionar essa tag para que nosso projeto encontre o .env
-load_dotenv(os.path.join(BASE_DIR, ".env")) 
+load_dotenv(os.path.join(BASE_DIR, ".env"))
+
+APPS_DIR = str(os.path.join(BASE_DIR, "apps")) 
+sys.path.insert(0, APPS_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -31,7 +34,7 @@ load_dotenv(os.path.join(BASE_DIR, ".env"))
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [ 
 		'localhost', 
@@ -73,7 +76,7 @@ THIRD_APPS = [ # são as Lib/app que instalamos no projeto
 ]
 
 PROJECT_APPS = [ # são os apps que criamos no projeto 
-        # 'apps.base',		# update 11/03/2024
+        'apps.base',		# update 11/03/2024
         # 'apps.myapp',   # Removido esses apps que nao criamos ainda.
 ]
 
@@ -214,7 +217,7 @@ STATIC_URL = '/static/'
 # ]
 
 MEDIA_ROOT=os.path.join(BASE_DIR,'media')
-MEDIA_URL = '/media'
+MEDIA_URL = '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
